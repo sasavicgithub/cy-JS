@@ -6,7 +6,7 @@ class WarehousePage extends BasePage {
   }
 
   visitWarehouseReceivePage() {
-    cy.visit(Cypress.env('appUrl') + '/warehouse/receive');
+    cy.visit(Cypress.env('baseUrl') + '/warehouse/receive');
     cy.url().should('include', 'warehouse/receive');
     cy.get('body').should('be.visible');
     cy.get('.loading, .spinner, [data-testid*="loading"]', { timeout: 10000 }).should('not.exist');
@@ -36,24 +36,15 @@ class WarehousePage extends BasePage {
 
       if (!foundTable) {
         cy.log('No table found, taking screenshot for debugging');
+        cy.get('body').should('exist');
         cy.screenshot('warehouse-page-no-table');
         cy.log('Page HTML sample:', $body.html().substring(0, 500));
       }
     });
 
-    cy.wait(2000);
+    cy.get('body').should('be.visible');
     return this;
   }
-
-  // submitReceiveForm() {
-  //   this.receiveButton.click();
-  //   return this;
-  // }
-
-  // verifyReceiveFormVisible() {
-  //   this.receiveForm.should('be.visible');
-  //   return this;
-  // }
 
   searchInventory(searchTerm) {
     this.inventorySearch.clear().type(searchTerm);
@@ -73,7 +64,7 @@ class WarehousePage extends BasePage {
 
   searchCreatedOrderNumber(orderNumber) {
     this.searchInput.clear().type(orderNumber);
-    cy.wait(2000);
+    cy.get('body').should('be.visible');
     return this;
   }
 
