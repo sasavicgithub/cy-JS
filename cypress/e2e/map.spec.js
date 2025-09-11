@@ -73,6 +73,11 @@ describe('Logineko Application Tests', () => {
 
             // Navigate to warehouse page and verify order exists
             warehousePage.visitWarehouseReceivePage();
+
+            // Wait for the page to fully load
+            cy.url().should('include', 'warehouse/receive');
+            cy.wait(3000); // Give time for data to load
+
             warehousePage.verifyCreatedOrderNumber(orderNumber);
           } else {
             cy.log('Unexpected status code:', response.status);
@@ -87,6 +92,10 @@ describe('Logineko Application Tests', () => {
 
       // Navigate to warehouse page
       warehousePage.visitWarehouseReceivePage();
+
+      // Wait for the page to fully load
+      cy.url().should('include', 'warehouse/receive');
+      cy.wait(3000); // Give time for data to load
 
       // Search for the order using the search input
       warehousePage.searchCreatedOrderNumber(orderNumber);

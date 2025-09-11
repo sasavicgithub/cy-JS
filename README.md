@@ -30,9 +30,9 @@ Before running this project, ensure you have the following installed:
    ```
 
 2. **Install dependencies:**
-   ```bash
-   npm install
-   ```
+```bash
+npm install
+```
 
 3. **Install Cypress (if not already installed):**
    ```bash

@@ -29,12 +29,6 @@ on:
         type: choice
         options:
           - chrome
-       
-      headless:
-        description: 'Run tests in headless mode'
-        required: true
-        default: true
-        type: boolean
 
 jobs:
   cypress-tests:
@@ -66,7 +60,6 @@ jobs:
         uses: cypress-io/github-action@v6
         with:
           browser: chrome
-          headless: ${{ github.event.inputs.headless == 'true' || github.event_name != 'workflow_dispatch' }}
           spec: ${{ github.event.inputs.test_type == 'map-tests' && 'cypress/e2e/map.spec.js' || github.event.inputs.test_type == 'warehouse-tests' && 'cypress/e2e/warehouse.spec.js' || github.event.inputs.test_type == 'order-creation-tests' && 'cypress/e2e/order-creation.spec.js' || '' }}
           record: false
           wait-on: ${{ secrets.CYPRESS_BASE_URL }}
@@ -134,7 +127,6 @@ jobs:
         uses: cypress-io/github-action@v6
         with:
           browser: chrome
-          headless: true
           record: false
           wait-on: ${{ secrets.CYPRESS_BASE_URL }}
           wait-on-timeout: 120
