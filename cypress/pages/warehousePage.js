@@ -6,7 +6,7 @@ class WarehousePage extends BasePage {
   }
 
   visitWarehouseReceivePage() {
-    cy.visit(Cypress.env('baseUrl') + '/warehouse/receive');
+    cy.visit(Cypress.env('appUrl') + '/warehouse/receive');
     cy.url().should('include', 'warehouse/receive');
     cy.get('body').should('be.visible');
     cy.get('.loading, .spinner, [data-testid*="loading"]', { timeout: 10000 }).should('not.exist');

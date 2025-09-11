@@ -76,7 +76,7 @@ describe('Logineko Application Tests', () => {
 
             // Wait for the page to fully load
             cy.url().should('include', 'warehouse/receive');
-            cy.wait(3000); // Give time for data to load
+            cy.get('body').should('be.visible');
 
             warehousePage.verifyCreatedOrderNumber(orderNumber);
           } else {
