@@ -6,10 +6,16 @@ class WarehousePage extends BasePage {
   }
 
   visitWarehouseReceivePage() {
-    cy.visit(Cypress.env('appUrl') + '/warehouse/receive');
+    const warehouseUrl = Cypress.env('appUrl') + '/warehouse/receive';
+    cy.log('Navigating to warehouse URL:', warehouseUrl);
+    cy.visit(warehouseUrl);
+    cy.url().then((url) => {
+      cy.log('Current URL after navigation:', url);
+    });
     cy.url().should('include', 'warehouse/receive');
     cy.get('body').should('be.visible');
     cy.get('.loading, .spinner, [data-testid*="loading"]', { timeout: 10000 }).should('not.exist');
+    cy.get('body').should('not.contain.text', 'LoginEKO Map');
     this.waitForTableToLoad();
     return this;
   }
