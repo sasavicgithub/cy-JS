@@ -5,7 +5,7 @@ module.exports = defineConfig({
     setupNodeEvents() {
       // implement node event listeners here
     },
-    baseUrl: 'https://app.e2e.gcp.logineko.com',
+    baseUrl: process.env.CYPRESS_BASE_URL || 'https://app.e2e.gcp.logineko.com',
     viewportWidth: 1280,
     viewportHeight: 720,
     defaultCommandTimeout: 10000,
@@ -17,13 +17,13 @@ module.exports = defineConfig({
     specPattern: 'cypress/e2e/**/*.{cy,spec}.{js,ts}',
     env: {
       // Environment variables for authentication
-      authBaseUrl: 'https://auth.e2e.gcp.logineko.com',
-      realm: 'logineko',
-      clientId: 'frontend-vue',
-      appUrl: 'https://app.e2e.gcp.logineko.com/logineko',
+      authBaseUrl: process.env.CYPRESS_AUTH_BASE_URL || 'https://auth.e2e.gcp.logineko.com',
+      realm: process.env.CYPRESS_REALM || 'logineko',
+      clientId: process.env.CYPRESS_CLIENT_ID || 'frontend-vue',
+      appUrl: process.env.CYPRESS_APP_URL || 'https://app.e2e.gcp.logineko.com/logineko',
       // Test user credentials
-      testUsername: 'e2e_tester',
-      testPassword: '9msMWtvlDp6MoJFdvI5fEAqDm4aBhiZW',
+      testUsername: process.env.CYPRESS_TEST_USERNAME || 'e2e_tester',
+      testPassword: process.env.CYPRESS_TEST_PASSWORD || '9msMWtvlDp6MoJFdvI5fEAqDm4aBhiZW',
     },
   },
 });

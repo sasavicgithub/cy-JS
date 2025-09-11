@@ -29,9 +29,7 @@ on:
         type: choice
         options:
           - chrome
-          - firefox
-          - edge
-          - electron
+       
       headless:
         description: 'Run tests in headless mode'
         required: true
@@ -76,14 +74,25 @@ jobs:
           headless: ${{ github.event.inputs.headless == 'true' || github.event_name != 'workflow_dispatch' }}
           spec: ${{ github.event.inputs.test_type == 'map-tests' && 'cypress/e2e/map.spec.js' || github.event.inputs.test_type == 'warehouse-tests' && 'cypress/e2e/warehouse.spec.js' || github.event.inputs.test_type == 'order-creation-tests' && 'cypress/e2e/order-creation.spec.js' || '' }}
           record: false
-          wait-on: 'https://app.e2e.gcp.logineko.com'
+          wait-on: ${{ secrets.CYPRESS_BASE_URL }}
           wait-on-timeout: 120
         env:
-          # Add your environment variables here
+          # Cypress Dashboard (optional)
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
           CYPRESS_PROJECT_ID: ${{ secrets.CYPRESS_PROJECT_ID }}
-          # Add any other environment variables your tests need
-          CYPRESS_BASE_URL: https://app.e2e.gcp.logineko.com
+          
+          # Application URLs
+          CYPRESS_BASE_URL: ${{ secrets.CYPRESS_BASE_URL }}
+          
+          # Authentication
+          CYPRESS_AUTH_BASE_URL: ${{ secrets.CYPRESS_AUTH_BASE_URL }}
+          CYPRESS_REALM: ${{ secrets.CYPRESS_REALM }}
+          CYPRESS_CLIENT_ID: ${{ secrets.CYPRESS_CLIENT_ID }}
+          CYPRESS_APP_URL: ${{ secrets.CYPRESS_APP_URL }}
+          
+          # Test User Credentials
+          CYPRESS_TEST_USERNAME: ${{ secrets.CYPRESS_TEST_USERNAME }}
+          CYPRESS_TEST_PASSWORD: ${{ secrets.CYPRESS_TEST_PASSWORD }}
 
       - name: Upload test results
         uses: actions/upload-artifact@v3
@@ -132,7 +141,7 @@ jobs:
           browser: chrome
           headless: true
           record: false
-          wait-on: 'https://app.e2e.gcp.logineko.com'
+          wait-on: ${{ secrets.CYPRESS_BASE_URL }}
           wait-on-timeout: 120
         env:
           CYPRESS_BASE_URL: https://app.e2e.gcp.logineko.com

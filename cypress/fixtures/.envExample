@@ -1,0 +1,12 @@
+{
+  "testUser": {
+    "username": "",
+    "password": ""
+  },
+  "keycloak": {
+    "authBaseUrl": "",
+    "realm": "",
+    "clientId": "",
+    "appUrl": "url"
+  }
+}

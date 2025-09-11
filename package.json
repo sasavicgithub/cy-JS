@@ -7,7 +7,6 @@
     "test:open": "cypress open",
     "test:headed": "cypress run --headed",
     "test:chrome": "cypress run --browser chrome",
-    "test:firefox": "cypress run --browser firefox",
     "scripts": {
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
