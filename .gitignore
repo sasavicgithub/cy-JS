@@ -1,0 +1,35 @@
+# Node.js dependencies
+node_modules/
+package-lock.json
+
+# Cypress test artifacts
+cypress/videos/
+cypress/screenshots/
+cypress/downloads/
+cypress/reports/
+cypress/results/
+
+# Environment variables (contains sensitive test credentials)
+.env
+.env.local
+cypress.env.json
+
+# IDE files
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# ESLint cache
+.eslintcache
+
+# Cypress cache
+.cypress-cache/
+
+# Local configuration overrides
+cypress.config.local.js

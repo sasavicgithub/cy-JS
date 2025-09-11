@@ -1,8 +1,8 @@
-const { defineConfig } = require("cypress");
+const { defineConfig } = require('cypress');
 
 module.exports = defineConfig({
   e2e: {
-    setupNodeEvents(on, config) {
+    setupNodeEvents() {
       // implement node event listeners here
     },
     baseUrl: 'https://app.e2e.gcp.logineko.com',
@@ -23,7 +23,7 @@ module.exports = defineConfig({
       appUrl: 'https://app.e2e.gcp.logineko.com/logineko',
       // Test user credentials
       testUsername: 'e2e_tester',
-      testPassword: '9msMWtvlDp6MoJFdvI5fEAqDm4aBhiZW'
-    }
+      testPassword: '9msMWtvlDp6MoJFdvI5fEAqDm4aBhiZW',
+    },
   },
 });

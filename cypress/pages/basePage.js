@@ -7,23 +7,35 @@ class BasePage {
   // ============================================
   // COMMON LOCATORS
   // ============================================
-  
+
   // User authentication elements
-  get loggedInUser() { return cy.get('[test-logged-in-user]'); }
-  get userAcronym() { return cy.get('[test-user-acronym]'); }
-  get userLabel() { return cy.get('[test-logged-in-user] .link__label'); }
-  
+  get loggedInUser() {
+    return cy.get('[test-logged-in-user]');
+  }
+  get userAcronym() {
+    return cy.get('[test-user-acronym]');
+  }
+  get userLabel() {
+    return cy.get('[test-logged-in-user] .link__label');
+  }
+
   // Search elements
-  get searchInput() { return cy.get('input[placeholder="Search"]'); }
-  get mainSearchInput() { return cy.get('[test-main-search-input]'); }
-  
+  get searchInput() {
+    return cy.get('input[placeholder="Search"]');
+  }
+  get mainSearchInput() {
+    return cy.get('[test-main-search-input]');
+  }
+
   // Navigation elements
-  get mapLink() { return cy.get('[href*="/logineko/map"]'); }
-  
+  get mapLink() {
+    return cy.get('[href*="/logineko/map"]');
+  }
+
   // ============================================
   // COMMON METHODS
   // ============================================
-  
+
   /**
    * Verify user is logged in and display user information
    */
@@ -32,9 +44,7 @@ class BasePage {
     cy.get('body').then(($body) => {
       if ($body.find('[test-logged-in-user]').length > 0) {
         this.loggedInUser.should('be.visible');
-        this.userLabel
-          .should('be.visible')
-          .and('contain.text', expectedName);
+        this.userLabel.should('be.visible').and('contain.text', expectedName);
       } else {
         cy.log('⚠️ User element not found - checking if user is logged in via other means');
         // Alternative: check if we're redirected to login page
@@ -49,17 +59,15 @@ class BasePage {
     });
     return this;
   }
-  
+
   /**
    * Verify user acronym is displayed
    */
   verifyUserAcronym(expectedAcronym = 'ET') {
-    this.userAcronym
-      .should('be.visible')
-      .and('have.text', expectedAcronym);
+    this.userAcronym.should('be.visible').and('have.text', expectedAcronym);
     return this;
   }
-  
+
   /**
    * Verify search input is visible
    */
@@ -67,7 +75,7 @@ class BasePage {
     this.searchInput.should('be.visible');
     return this;
   }
-  
+
   /**
    * Type in search input
    */
@@ -75,7 +83,7 @@ class BasePage {
     this.searchInput.clear().type(text);
     return this;
   }
-  
+
   /**
    * Verify URL contains expected path
    */
@@ -83,7 +91,7 @@ class BasePage {
     cy.url().should('include', expectedPath);
     return this;
   }
-  
+
   /**
    * Navigate to map page
    */
@@ -91,12 +99,12 @@ class BasePage {
     this.mapLink.click();
     return this;
   }
-  
+
   /**
    * Handle uncaught exceptions (like Keycloak iframe postMessage errors)
    */
   handleUncaughtExceptions() {
-    cy.on('uncaught:exception', (err, runnable) => {
+    cy.on('uncaught:exception', (err) => {
       // Ignore postMessage errors from Keycloak iframe
       if (err.message.includes('postMessage')) {
         return false;
@@ -116,13 +124,13 @@ class BasePage {
         cy.log('✅ User element found - user is logged in');
         return true;
       }
-      
+
       // Check for user acronym
       if ($body.find('[test-user-acronym]').length > 0) {
         cy.log('✅ User acronym found - user is logged in');
         return true;
       }
-      
+
       // Check if we're on auth page (not logged in)
       cy.url().then((url) => {
         if (url.includes('auth.e2e.gcp.logineko.com')) {

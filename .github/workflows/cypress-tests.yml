@@ -1,0 +1,179 @@
+name: Cypress E2E Tests
+
+on:
+  # Trigger on push to main branch
+  push:
+    branches: [main, master]
+
+  # Trigger on pull requests to main branch
+  pull_request:
+    branches: [main, master]
+
+  # Allow manual trigger from GitHub Actions tab
+  workflow_dispatch:
+    inputs:
+      test_type:
+        description: 'Type of tests to run'
+        required: true
+        default: 'all'
+        type: choice
+        options:
+          - all
+          - map-tests
+          - warehouse-tests
+          - order-creation-tests
+      browser:
+        description: 'Browser to run tests in'
+        required: true
+        default: 'chrome'
+        type: choice
+        options:
+          - chrome
+          - firefox
+          - edge
+          - electron
+      headless:
+        description: 'Run tests in headless mode'
+        required: true
+        default: true
+        type: boolean
+
+jobs:
+  cypress-tests:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        # Run tests on multiple browsers
+        browser: [chrome, firefox, edge]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Cache Cypress binary
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/Cypress
+          key: cypress-${{ runner.os }}-${{ matrix.browser }}-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            cypress-${{ runner.os }}-${{ matrix.browser }}-
+            cypress-${{ runner.os }}-
+
+      - name: Run Cypress tests
+        uses: cypress-io/github-action@v6
+        with:
+          browser: ${{ matrix.browser }}
+          headless: ${{ github.event.inputs.headless == 'true' || github.event_name != 'workflow_dispatch' }}
+          spec: ${{ github.event.inputs.test_type == 'map-tests' && 'cypress/e2e/map.spec.js' || github.event.inputs.test_type == 'warehouse-tests' && 'cypress/e2e/warehouse.spec.js' || github.event.inputs.test_type == 'order-creation-tests' && 'cypress/e2e/order-creation.spec.js' || '' }}
+          record: false
+          wait-on: 'https://app.e2e.gcp.logineko.com'
+          wait-on-timeout: 120
+        env:
+          # Add your environment variables here
+          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+          CYPRESS_PROJECT_ID: ${{ secrets.CYPRESS_PROJECT_ID }}
+          # Add any other environment variables your tests need
+          CYPRESS_BASE_URL: https://app.e2e.gcp.logineko.com
+
+      - name: Upload test results
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: cypress-results-${{ matrix.browser }}
+          path: |
+            cypress/screenshots
+            cypress/videos
+            cypress/reports
+          retention-days: 7
+
+      - name: Upload test report
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: test-report-${{ matrix.browser }}
+          path: cypress/reports/mochawesome-report.html
+          retention-days: 30
+
+  # Optional: Run tests on different Node.js versions
+  test-matrix:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch' && github.event.inputs.test_type == 'all'
+
+    strategy:
+      matrix:
+        node-version: [16, 18, 20]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run Cypress tests on Node ${{ matrix.node-version }}
+        uses: cypress-io/github-action@v6
+        with:
+          browser: chrome
+          headless: true
+          record: false
+          wait-on: 'https://app.e2e.gcp.logineko.com'
+          wait-on-timeout: 120
+        env:
+          CYPRESS_BASE_URL: https://app.e2e.gcp.logineko.com
+
+  # Optional: Security scan
+  security-scan:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run security audit
+        run: npm audit --audit-level moderate
+
+      - name: Check for vulnerabilities
+        run: npm audit --audit-level high
+
+  # Optional: Lint and format check
+  lint-check:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run ESLint
+        run: npx eslint cypress/ --ext .js,.ts
+        continue-on-error: true
+
+      - name: Check code formatting
+        run: npx prettier --check cypress/
+        continue-on-error: true

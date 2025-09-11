@@ -1,302 +1,271 @@
-# Logineko Cypress Authentication
+# LoginEKO Cypress E2E Testing Project
 
-This project provides comprehensive API-based authentication methods for testing the Logineko application using Cypress with Keycloak (OpenID Connect). It includes both API-based and form-based login methods that replicate the exact authentication flow used by the browser.
+This project contains end-to-end (E2E) tests for the LoginEKO application using Cypress testing framework.
 
-## Authentication Details
+## 📋 Table of Contents
 
-- **IAM Provider**: Keycloak (OpenID Connect)
-- **Auth Base URL**: https://auth.e2e.gcp.logineko.com
-- **Realm**: logineko
-- **Client ID**: frontend-vue
+- [Prerequisites](#prerequisites)
+- [Installation](#installation)
+- [Configuration](#configuration)
+- [Running Tests](#running-tests)
+- [Project Structure](#project-structure)
+- [Test Scenarios](#test-scenarios)
+- [CI/CD](#cicd)
+- [Troubleshooting](#troubleshooting)
 
-## Features
+## 🔧 Prerequisites
 
-- **API-based Login**: Fast, reliable authentication using direct API calls
-- **Form-based Login**: Browser-like authentication for UI testing
-- **Session Management**: Preserve and restore authentication state across tests
-- **Token Management**: Automatic handling of access tokens, refresh tokens, and ID tokens
-- **Cookie Management**: Proper handling of Keycloak authentication cookies
-- **Error Handling**: Comprehensive error handling for various failure scenarios
+Before running this project, ensure you have the following installed:
 
-## Setup
+- **Node.js** (version 16 or higher)
+- **npm** (comes with Node.js)
+- **Git**
 
-1. Install dependencies:
-```bash
-npm install
-```
+## 📦 Installation
 
-2. Update test credentials in `cypress/fixtures/test-credentials.json`:
-```json
-{
-  "testUser": {
-    "username": "your-actual-username@example.com",
-    "password": "your-actual-password"
-  }
+1. **Clone the repository:**
+   ```bash
+   git clone <repository-url>
+   cd login_cy
+   ```
+
+2. **Install dependencies:**
+   ```bash
+   npm install
+   ```
+
+3. **Install Cypress (if not already installed):**
+   ```bash
+   npx cypress install
+   ```
+
+## ⚙️ Configuration
+
+### Environment Variables
+
+The project uses environment variables for configuration. These are set in `cypress.config.js`:
+
+```javascript
+env: {
+  authBaseUrl: 'https://auth.e2e.gcp.logineko.com',
+  realm: 'logineko',
+  clientId: 'frontend-vue',
+  appUrl: 'https://app.e2e.gcp.logineko.com/logineko',
+  testUsername: 'e2e_tester',
+  testPassword: '9msMWtvlDp6MoJFdvI5fEAqDm4aBhiZW'
 }
 ```
 
-3. Run tests:
+### Cypress Configuration
+
+The main configuration is in `cypress.config.js`:
+- **Base URL:** `https://app.e2e.gcp.logineko.com`
+- **Viewport:** 1280x720
+- **Timeouts:** 10 seconds for commands, requests, and responses
+- **Chrome Web Security:** Disabled for cross-origin requests
+
+## 🚀 Running Tests
+
+### Open Cypress Test Runner (Interactive Mode)
+
 ```bash
 npx cypress open
-# or
+```
+
+This opens the Cypress Test Runner where you can:
+- Select tests to run
+- Watch tests execute in real-time
+- Debug tests interactively
+
+### Run Tests in Headless Mode
+
+```bash
+# Run all tests
 npx cypress run
+
+# Run specific test file
+npx cypress run --spec "cypress/e2e/map.spec.js"
+
+# Run tests in specific browser
+npx cypress run --browser chrome
+npx cypress run --browser firefox
+npx cypress run --browser edge
+
+# Run tests with video recording
+npx cypress run --record
+
+# Run tests with specific viewport
+npx cypress run --config viewportWidth=1920,viewportHeight=1080
 ```
 
-## Available Commands
+### Run Tests with Custom Configuration
 
-### Authentication Commands
+```bash
+# Run tests with custom base URL
+npx cypress run --config baseUrl=https://staging.app.logineko.com
 
-#### `cy.keycloakLogin(username, password, redirectUrl?)`
-Performs API-based authentication using the Keycloak OAuth2 flow.
-
-```javascript
-cy.keycloakLogin('user@example.com', 'password').then((tokens) => {
-  // Tokens are automatically stored in localStorage and cookies
-  console.log('Access token:', tokens.access_token);
-});
+# Run tests with custom timeout
+npx cypress run --config defaultCommandTimeout=15000
 ```
 
-#### `cy.loginViaAPI(username, password, redirectUrl?)`
-Legacy API-based authentication method (use `cy.keycloakLogin` instead).
+## 📁 Project Structure
 
-```javascript
-cy.loginViaAPI('user@example.com', 'password').then((tokens) => {
-  // Tokens are automatically stored in localStorage and cookies
-  console.log('Access token:', tokens.access_token);
-});
+```
+login_cy/
+├── cypress/
+│   ├── e2e/                    # Test files
+│   │   └── map.spec.js        # Main test suite
+│   ├── fixtures/              # Test data
+│   │   └── example.json
+│   ├── pages/                 # Page Object Model
+│   │   ├── basePage.js        # Base page class
+│   │   ├── mapPage.js         # Map page object
+│   │   └── warehousePage.js   # Warehouse page object
+│   ├── Service/               # API services
+│   │   └── Helper/
+│   │       └── userService.js # User/API service methods
+│   └── support/               # Support files
+│       ├── commands.js        # Custom Cypress commands
+│       ├── e2e.js            # E2E support file
+│       └── keycloak-commands.js # Authentication commands
+├── .github/
+│   └── workflows/
+│       └── cypress-tests.yml  # GitHub Actions workflow
+├── cypress.config.js          # Cypress configuration
+├── eslint.config.mjs          # ESLint configuration
+├── .prettierrc               # Prettier configuration
+├── .gitignore               # Git ignore rules
+└── package.json             # Project dependencies
 ```
 
-#### `cy.keycloakLoginForm(username, password)`
-Performs form-based authentication by visiting the Keycloak login page and submitting credentials.
+## 🧪 Test Scenarios
 
-```javascript
-cy.keycloakLoginForm('user@example.com', 'password');
+### 1. Map Page Tests
+- **Purpose:** Verify user authentication and map page functionality
+- **File:** `cypress/e2e/map.spec.js`
+- **Tests:**
+  - User login and authentication
+  - Map page loading and display
+  - User information verification
+
+### 2. Warehouse Page Tests
+- **Purpose:** Test warehouse receive page functionality
+- **File:** `cypress/e2e/map.spec.js`
+- **Tests:**
+  - Warehouse page navigation
+  - User authentication verification
+  - Search input visibility
+
+### 3. Order Creation and Search Tests
+- **Purpose:** Test API integration and order management
+- **File:** `cypress/e2e/map.spec.js`
+- **Tests:**
+  - Create receive orders via API
+  - Random location selection
+  - Order search functionality
+  - Order status verification
+
+## 🔄 CI/CD
+
+### GitHub Actions
+
+The project includes a GitHub Actions workflow (`.github/workflows/cypress-tests.yml`) that:
+
+- **Triggers:** Push to main/master, pull requests, manual dispatch
+- **Browsers:** Chrome, Firefox, Edge
+- **Features:**
+  - Multi-browser testing
+  - Artifact upload (screenshots, videos, reports)
+  - Caching for faster builds
+  - Security and lint checks
+
+### Manual Trigger Options
+
+When triggering manually from GitHub Actions, you can choose:
+- **Test Type:** all, map-tests, warehouse-tests, order-creation-tests
+- **Browser:** chrome, firefox, edge, electron
+- **Headless Mode:** true/false
+
+## 🛠️ Development
+
+### Code Quality
+
+The project uses:
+- **ESLint** for code linting
+- **Prettier** for code formatting
+- **Cypress ESLint Plugin** for Cypress-specific rules
+
+### Running Linters
+
+```bash
+# Run ESLint
+npx eslint cypress/ --ext .js
+
+# Run Prettier
+npx prettier --check cypress/
+
+# Fix Prettier issues
+npx prettier --write cypress/
 ```
 
-#### `cy.loginViaForm(username, password)`
-Legacy form-based authentication method (use `cy.keycloakLoginForm` instead).
+### Page Object Model
 
-```javascript
-cy.loginViaForm('user@example.com', 'password');
-```
+The project follows the Page Object Model pattern:
+- **BasePage:** Common functionality and locators
+- **MapPage:** Map-specific page interactions
+- **WarehousePage:** Warehouse page interactions
+- **UserService:** API service methods
 
-#### `cy.keycloakLogout()`
-Clears all Keycloak authentication state including cookies and localStorage.
-
-```javascript
-cy.keycloakLogout();
-```
-
-#### `cy.getKeycloakUserInfo()`
-Retrieves user information from Keycloak after authentication.
-
-```javascript
-cy.getKeycloakUserInfo().then((userInfo) => {
-  console.log('User ID:', userInfo.sub);
-  console.log('Username:', userInfo.preferred_username);
-});
-```
-
-#### `cy.logout()`
-Legacy logout method (use `cy.keycloakLogout` instead).
-
-```javascript
-cy.logout();
-```
-
-### Session Management Commands
-
-#### `cy.preserveAuth()`
-Saves current authentication state for later restoration.
-
-```javascript
-cy.loginViaAPI('user@example.com', 'password');
-cy.preserveAuth();
-```
-
-#### `cy.restoreAuth()`
-Restores previously saved authentication state.
-
-```javascript
-cy.restoreAuth();
-```
-
-#### `cy.isAuthenticated()`
-Checks if the user is currently authenticated.
-
-```javascript
-cy.isAuthenticated().then((authenticated) => {
-  if (authenticated) {
-    console.log('User is authenticated');
-  }
-});
-```
-
-### Token Management Commands
-
-#### `cy.getAuthTokens()`
-Retrieves current authentication tokens.
-
-```javascript
-cy.getAuthTokens().then((tokens) => {
-  console.log('Access token:', tokens.accessToken);
-  console.log('Refresh token:', tokens.refreshToken);
-  console.log('ID token:', tokens.idToken);
-});
-```
-
-#### `cy.setAuthTokens(tokens)`
-Manually sets authentication tokens (useful for debugging).
-
-```javascript
-cy.setAuthTokens({
-  access_token: 'your-access-token',
-  refresh_token: 'your-refresh-token',
-  id_token: 'your-id-token'
-});
-```
-
-### API Request Commands
-
-#### `cy.authenticatedRequest(options)`
-Makes an authenticated API request with automatic token inclusion.
-
-```javascript
-cy.authenticatedRequest({
-  method: 'GET',
-  url: '/api/some-endpoint'
-}).then((response) => {
-  expect(response.status).to.equal(200);
-});
-```
-
-## Test Examples
-
-### Basic Authentication Test
-
-```javascript
-describe('Authentication Tests', () => {
-  it('should login successfully', () => {
-    cy.loginViaAPI('user@example.com', 'password');
-    
-    // Verify authentication
-    cy.visit('https://app.e2e.gcp.logineko.com/logineko/map');
-    cy.url().should('include', 'app.e2e.gcp.logineko.com');
-    cy.url().should('not.include', 'auth.e2e.gcp.logineko.com');
-  });
-});
-```
-
-### Cross-Test Session Management
-
-```javascript
-describe('Session Management', () => {
-  beforeEach(() => {
-    cy.loginViaAPI('user@example.com', 'password');
-    cy.preserveAuth();
-  });
-
-  it('should maintain session across tests', () => {
-    cy.restoreAuth();
-    cy.visit('https://app.e2e.gcp.logineko.com/logineko/map');
-    cy.url().should('include', 'app.e2e.gcp.logineko.com');
-  });
-});
-```
-
-### API Testing with Authentication
-
-```javascript
-describe('API Tests', () => {
-  beforeEach(() => {
-    cy.loginViaAPI('user@example.com', 'password');
-  });
-
-  it('should make authenticated API calls', () => {
-    cy.authenticatedRequest({
-      method: 'GET',
-      url: '/api/user/profile'
-    }).then((response) => {
-      expect(response.status).to.equal(200);
-      expect(response.body).to.have.property('user');
-    });
-  });
-});
-```
-
-## Configuration
-
-The authentication system is configured in `cypress.config.js`:
-
-```javascript
-module.exports = defineConfig({
-  e2e: {
-    baseUrl: 'https://app.e2e.gcp.logineko.com',
-    chromeWebSecurity: false, // Required for cross-origin requests
-    experimentalSessionAndOrigin: true, // Enable session management
-    env: {
-      authBaseUrl: 'https://auth.e2e.gcp.logineko.com/realms/logineko',
-      clientId: 'frontend-vue',
-      appUrl: 'https://app.e2e.gcp.logineko.com/logineko/map'
-    }
-  }
-});
-```
-
-## Authentication Flow
-
-The API-based login method follows this flow:
-
-1. **Initial Request**: Visit the app URL to trigger OAuth flow
-2. **Auth Redirect**: Follow redirect to Keycloak authentication server
-3. **Extract Parameters**: Extract session code, execution ID, and other parameters
-4. **Submit Credentials**: POST credentials to the authentication endpoint
-5. **Handle Redirect**: Process the redirect response with authorization code
-6. **Exchange Tokens**: Exchange authorization code for access/refresh tokens
-7. **Store State**: Store tokens in localStorage and cookies for session persistence
-
-## Error Handling
-
-The authentication methods include comprehensive error handling for:
-
-- Invalid credentials
-- Network failures
-- Missing authentication parameters
-- Token exchange failures
-- Session expiration
-
-## Security Notes
-
-- Test credentials should be stored securely and not committed to version control
-- The `chromeWebSecurity: false` setting is required for cross-origin requests but should only be used in test environments
-- Authentication tokens are automatically cleared between test runs for security
-
-## Troubleshooting
+## 🐛 Troubleshooting
 
 ### Common Issues
 
-1. **Authentication Fails**: Verify credentials in `test-credentials.json`
-2. **Cross-Origin Errors**: Ensure `chromeWebSecurity: false` is set in config
-3. **Session Not Persisting**: Check that cookies are being set with correct domain
-4. **Token Expiration**: Implement token refresh logic if needed
+1. **Authentication Failures:**
+   - Verify test credentials in `cypress.config.js`
+   - Check if the test environment is accessible
+   - Ensure Keycloak authentication is working
+
+2. **Test Timeouts:**
+   - Increase timeout values in `cypress.config.js`
+   - Check network connectivity
+   - Verify application response times
+
+3. **Element Not Found:**
+   - Update selectors in page objects
+   - Add proper waits for dynamic content
+   - Check if the application UI has changed
+
+4. **API Failures:**
+   - Verify API endpoints are accessible
+   - Check authentication tokens
+   - Review API response formats
 
 ### Debug Mode
 
-Enable debug logging by adding to your test:
+Run tests in debug mode for detailed information:
 
-```javascript
-Cypress.on('uncaught:exception', (err, runnable) => {
-  console.log('Error:', err);
-  return false;
-});
+```bash
+# Open Cypress in debug mode
+npx cypress open --config video=false
+
+# Run specific test with debug output
+npx cypress run --spec "cypress/e2e/map.spec.js" --headed
 ```
 
-## Contributing
+### Logs and Artifacts
 
-When adding new authentication methods or modifying existing ones:
+- **Screenshots:** Automatically captured on test failures
+- **Videos:** Recorded for all test runs (can be disabled)
+- **Console Logs:** Available in Cypress Test Runner
+- **Network Requests:** Visible in browser dev tools
 
-1. Follow the existing command structure
-2. Include comprehensive error handling
-3. Add appropriate test cases
-4. Update this documentation
-5. Ensure backward compatibility
+## 📊 Test Reports
+
+Test results are available in:
+- **Cypress Test Runner:** Real-time results
+- **Terminal Output:** Summary after headless runs
+- **GitHub Actions:** Detailed reports in CI/CD
+- **Artifacts:** Screenshots and videos uploaded to GitHub
+
+
+

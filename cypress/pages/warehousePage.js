@@ -9,54 +9,106 @@ class WarehousePage extends BasePage {
   // ============================================
   // WAREHOUSE SPECIFIC LOCATORS
   // ============================================
-  
+
   // Navigation elements
-  get warehouseReceiveLink() { return cy.get('[href*="/warehouse/receive"]'); }
-  get warehouseShipLink() { return cy.get('[href*="/warehouse/ship"]'); }
-  get warehouseInventoryLink() { return cy.get('[href*="/warehouse/inventory"]'); }
-  
-  
+  get warehouseReceiveLink() {
+    return cy.get('[href*="/warehouse/receive"]');
+  }
+  get warehouseShipLink() {
+    return cy.get('[href*="/warehouse/ship"]');
+  }
+  get warehouseInventoryLink() {
+    return cy.get('[href*="/warehouse/inventory"]');
+  }
+
   // Warehouse Receive page specific elements
-  get receivePageTitle() { return cy.get('[test-receive-page-title]'); }
-  get receiveForm() { return cy.get('[test-receive-form]'); }
-  get receiveButton() { return cy.get('[test-receive-button]'); }
-  get receiveTable() { return cy.get('[test-receive-table]'); }
-  
-  
+  get receivePageTitle() {
+    return cy.get('[test-receive-page-title]');
+  }
+  get receiveForm() {
+    return cy.get('[test-receive-form]');
+  }
+  get receiveButton() {
+    return cy.get('[test-receive-button]');
+  }
+  get receiveTable() {
+    return cy.get('[test-receive-table]');
+  }
+
   // Warehouse Inventory page specific elements
-  get inventoryPageTitle() { return cy.get('[test-inventory-page-title]'); }
-  get inventoryTable() { return cy.get('[test-inventory-table]'); }
-  get inventoryFilter() { return cy.get('[test-inventory-filter]'); }
-  get inventorySearch() { return cy.get('[test-inventory-search]'); }
-  
+  get inventoryPageTitle() {
+    return cy.get('[test-inventory-page-title]');
+  }
+  get inventoryTable() {
+    return cy.get('[test-inventory-table]');
+  }
+  get inventoryFilter() {
+    return cy.get('[test-inventory-filter]');
+  }
+  get inventorySearch() {
+    return cy.get('[test-inventory-search]');
+  }
+
   // Common warehouse elements
-  get warehouseMenu() { return cy.get('[test-warehouse-menu]'); }
-  get warehouseSubmenu() { return cy.get('[test-warehouse-submenu]'); }
-  get warehouseBreadcrumb() { return cy.get('[test-warehouse-breadcrumb]'); }
-  
+  get warehouseMenu() {
+    return cy.get('[test-warehouse-menu]');
+  }
+  get warehouseSubmenu() {
+    return cy.get('[test-warehouse-submenu]');
+  }
+  get warehouseBreadcrumb() {
+    return cy.get('[test-warehouse-breadcrumb]');
+  }
+
   // Form elements
-  get productInput() { return cy.get('[test-product-input]'); }
-  get quantityInput() { return cy.get('[test-quantity-input]'); }
-  get batchInput() { return cy.get('[test-batch-input]'); }
-  get dateInput() { return cy.get('[test-date-input]'); }
-  get supplierInput() { return cy.get('[test-supplier-input]'); }
-  
+  get productInput() {
+    return cy.get('[test-product-input]');
+  }
+  get quantityInput() {
+    return cy.get('[test-quantity-input]');
+  }
+  get batchInput() {
+    return cy.get('[test-batch-input]');
+  }
+  get dateInput() {
+    return cy.get('[test-date-input]');
+  }
+  get supplierInput() {
+    return cy.get('[test-supplier-input]');
+  }
+
   // Action buttons
-  get saveButton() { return cy.get('[test-save-button]'); }
-  get cancelButton() { return cy.get('[test-cancel-button]'); }
-  get deleteButton() { return cy.get('[test-delete-button]'); }
-  get editButton() { return cy.get('[test-edit-button]'); }
-  get addButton() { return cy.get('[test-add-button]'); }
-  
+  get saveButton() {
+    return cy.get('[test-save-button]');
+  }
+  get cancelButton() {
+    return cy.get('[test-cancel-button]');
+  }
+  get deleteButton() {
+    return cy.get('[test-delete-button]');
+  }
+  get editButton() {
+    return cy.get('[test-edit-button]');
+  }
+  get addButton() {
+    return cy.get('[test-add-button]');
+  }
+
   // Table elements
-  get tableRows() { return cy.get('[test-table-rows]'); }
-  get tableHeaders() { return cy.get('[test-table-headers]'); }
-  get tablePagination() { return cy.get('[test-table-pagination]'); }
-  
+  get tableRows() {
+    return cy.get('[test-table-rows]');
+  }
+  get tableHeaders() {
+    return cy.get('[test-table-headers]');
+  }
+  get tablePagination() {
+    return cy.get('[test-table-pagination]');
+  }
+
   // ============================================
   // METHODS
   // ============================================
-  
+
   /**
    * Visit the warehouse page
    */
@@ -64,7 +116,7 @@ class WarehousePage extends BasePage {
     cy.visit(Cypress.env('appUrl') + '/warehouse');
     return this;
   }
-  
+
   /**
    * Visit the warehouse receive page
    */
@@ -73,10 +125,6 @@ class WarehousePage extends BasePage {
     return this;
   }
 
-
-  
-
-  
   /**
    * Submit receive form
    */
@@ -84,7 +132,7 @@ class WarehousePage extends BasePage {
     this.receiveButton.click();
     return this;
   }
-  
+
   /**
    * Verify receive form is visible
    */
@@ -92,14 +140,12 @@ class WarehousePage extends BasePage {
     this.receiveForm.should('be.visible');
     return this;
   }
-  
 
   verifyReceiveTableVisible() {
     this.receiveTable.should('be.visible');
     return this;
   }
 
-  
   searchInventory(searchTerm) {
     this.inventorySearch.clear().type(searchTerm);
     return this;
@@ -114,7 +160,7 @@ class WarehousePage extends BasePage {
     this.inventoryTable.should('be.visible');
     return this;
   }
-  
+
   /**
    * Verify inventory page title
    */
@@ -122,11 +168,11 @@ class WarehousePage extends BasePage {
     this.inventoryPageTitle.should('be.visible').and('contain.text', expectedTitle);
     return this;
   }
-  
+
   // ============================================
   // COMMON WAREHOUSE METHODS
   // ============================================
-  
+
   /**
    * Verify warehouse menu is visible
    */
@@ -134,7 +180,7 @@ class WarehousePage extends BasePage {
     this.warehouseMenu.should('be.visible');
     return this;
   }
-  
+
   /**
    * Verify warehouse breadcrumb is visible
    */
@@ -142,7 +188,7 @@ class WarehousePage extends BasePage {
     this.warehouseBreadcrumb.should('be.visible');
     return this;
   }
-  
+
   /**
    * Click add button
    */
@@ -150,7 +196,7 @@ class WarehousePage extends BasePage {
     this.addButton.click();
     return this;
   }
-  
+
   /**
    * Click edit button
    */
@@ -158,7 +204,7 @@ class WarehousePage extends BasePage {
     this.editButton.click();
     return this;
   }
-  
+
   /**
    * Click delete button
    */
@@ -166,7 +212,7 @@ class WarehousePage extends BasePage {
     this.deleteButton.click();
     return this;
   }
-  
+
   /**
    * Click save button
    */
@@ -174,7 +220,7 @@ class WarehousePage extends BasePage {
     this.saveButton.click();
     return this;
   }
-  
+
   /**
    * Click cancel button
    */
@@ -182,7 +228,7 @@ class WarehousePage extends BasePage {
     this.cancelButton.click();
     return this;
   }
-  
+
   /**
    * Verify table has rows
    */
@@ -190,7 +236,7 @@ class WarehousePage extends BasePage {
     this.tableRows.should('have.length.at.least', expectedCount);
     return this;
   }
-  
+
   /**
    * Verify table headers are visible
    */
@@ -214,6 +260,18 @@ class WarehousePage extends BasePage {
   searchCreatedOrderNumber(orderNumber) {
     // Use the search input to search for the order number
     this.searchInput.clear().type(orderNumber);
+    return this;
+  }
+
+  /**
+   * Verify the order status in the table
+   * @param {string} expectedStatus - The expected status (e.g., "To-Do", "In Progress", "Completed")
+   */
+  verifyOrderStatus(expectedStatus) {
+    cy.get('.cell--status > .tooltip > .tooltip__value > .cell__value').should(
+      'contain.text',
+      expectedStatus
+    );
     return this;
   }
 }

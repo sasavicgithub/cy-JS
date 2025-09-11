@@ -7,7 +7,7 @@ class UserService {
   // ============================================
   // WAREHOUSE API METHODS
   // ============================================
-  
+
   /**
    * Create a new receive order from harvest
    * @param {Object} orderData - The order data object
@@ -19,21 +19,23 @@ class UserService {
    */
   createReceiveOrder(orderData) {
     const defaultOrderData = {
-      orderType: "RECEIVE_FROM_HARVEST",
-      expectedDate: "2025-09-15T00:00:00.000Z",
-      positions: [{
-        positionId: 1,
-        comment: null,
-        product: {
-          sku: "APPIUM229764"
+      orderType: 'RECEIVE_FROM_HARVEST',
+      expectedDate: '2025-09-15T00:00:00.000Z',
+      positions: [
+        {
+          positionId: 1,
+          comment: null,
+          product: {
+            sku: 'APPIUM229764',
+          },
+          quantity: {
+            value: '5',
+            unit: 'kg',
+          },
         },
-        quantity: {
-          value: "5",
-          unit: "kg"
-        }
-      }],
-      partnerId: "000000",
-      locationGroupName: "TPPO"
+      ],
+      partnerId: '000000',
+      locationGroupName: 'TPPO',
     };
 
     // Merge provided data with defaults
@@ -42,7 +44,7 @@ class UserService {
     return cy.getAuthTokens().then((tokens) => {
       const headers = {
         'Content-Type': 'application/json',
-        'Accept': 'application/json'
+        Accept: 'application/json',
       };
 
       // Add authorization header if access token is available
@@ -55,7 +57,7 @@ class UserService {
         url: `https://app.e2e.gcp.logineko.com/api/v2/wms/receiving-orders`,
         headers: headers,
         body: payload,
-        failOnStatusCode: false
+        failOnStatusCode: false,
       });
     });
   }
@@ -70,31 +72,41 @@ class UserService {
    * @param {string} locationGroupName - Location group name (optional, if null will use random location)
    * @param {boolean} useRandomLocation - Whether to use a random location (default: true)
    */
-  createReceiveOrderFromHarvest(sku = "APPIUM229764", quantity = "3", unit = "kg", expectedDate = null, partnerId = "000000", locationGroupName = null, useRandomLocation = true) {
+  createReceiveOrderFromHarvest(
+    sku = 'APPIUM229764',
+    quantity = '3',
+    unit = 'kg',
+    expectedDate = null,
+    partnerId = '000000',
+    locationGroupName = null,
+    useRandomLocation = true
+  ) {
     // Use next Monday if no expectedDate provided
     const finalExpectedDate = expectedDate || this.getNextMonday();
-    
+
     // If useRandomLocation is true and no specific location provided, get a random one
     if (useRandomLocation && !locationGroupName) {
       return this.getRandomLocation().then((randomLocation) => {
         const orderData = {
-          orderType: "RECEIVE_FROM_HARVEST",
+          orderType: 'RECEIVE_FROM_HARVEST',
           expectedDate: finalExpectedDate,
-          positions: [{
-            positionId: 1,
-            comment: "order",
-            product: {
-              sku: sku
+          positions: [
+            {
+              positionId: 1,
+              comment: 'order',
+              product: {
+                sku: sku,
+              },
+              quantity: {
+                value: quantity,
+                unit: unit,
+              },
             },
-            quantity: {
-              value: quantity,
-              unit: unit
-            }
-          }],
+          ],
           partnerId: partnerId,
           locationGroupName: randomLocation.locationGroupName,
           limit: 40,
-          offset: 0
+          offset: 0,
         };
 
         // Log the request data being sent
@@ -108,26 +120,28 @@ class UserService {
       });
     } else {
       // Use provided location or fallback to default
-      const finalLocation = locationGroupName || "1B5K";
-      
+      const finalLocation = locationGroupName || '1B5K';
+
       const orderData = {
-        orderType: "RECEIVE_FROM_HARVEST",
+        orderType: 'RECEIVE_FROM_HARVEST',
         expectedDate: finalExpectedDate,
-        positions: [{
-          positionId: 1,
-          comment: "order",
-          product: {
-            sku: sku
+        positions: [
+          {
+            positionId: 1,
+            comment: 'order',
+            product: {
+              sku: sku,
+            },
+            quantity: {
+              value: quantity,
+              unit: unit,
+            },
           },
-          quantity: {
-            value: quantity,
-            unit: unit
-          }
-        }],
+        ],
         partnerId: partnerId,
         locationGroupName: finalLocation,
         limit: 40,
-        offset: 0
+        offset: 0,
       };
 
       // Log the request data being sent
@@ -146,7 +160,7 @@ class UserService {
   testReceivingOrdersEndpoint() {
     return cy.getAuthTokens().then((tokens) => {
       const headers = {
-        'Accept': 'application/json'
+        Accept: 'application/json',
       };
 
       if (tokens.accessToken) {
@@ -157,7 +171,7 @@ class UserService {
         method: 'OPTIONS',
         url: `https://app.e2e.gcp.logineko.com/api/v2/wms/receiving-orders`,
         headers: headers,
-        failOnStatusCode: false
+        failOnStatusCode: false,
       });
     });
   }
@@ -168,7 +182,7 @@ class UserService {
   getReceivingOrders() {
     return cy.getAuthTokens().then((tokens) => {
       const headers = {
-        'Accept': 'application/json'
+        Accept: 'application/json',
       };
 
       if (tokens.accessToken) {
@@ -179,7 +193,7 @@ class UserService {
         method: 'GET',
         url: `https://app.e2e.gcp.logineko.com/api/v2/wms/receiving-orders`,
         headers: headers,
-        failOnStatusCode: false
+        failOnStatusCode: false,
       });
     });
   }
@@ -193,9 +207,9 @@ class UserService {
       method: 'GET',
       url: `${Cypress.env('appUrl')}/api/v2/warehouse/receiving-orders/${orderId}`,
       headers: {
-        'Accept': 'application/json'
+        Accept: 'application/json',
       },
-      failOnStatusCode: false
+      failOnStatusCode: false,
     });
   }
 
@@ -210,10 +224,10 @@ class UserService {
       url: `${Cypress.env('appUrl')}/api/v2/warehouse/receiving-orders/${orderId}`,
       headers: {
         'Content-Type': 'application/json',
-        'Accept': 'application/json'
+        Accept: 'application/json',
       },
       body: updateData,
-      failOnStatusCode: false
+      failOnStatusCode: false,
     });
   }
 
@@ -226,16 +240,16 @@ class UserService {
       method: 'DELETE',
       url: `${Cypress.env('appUrl')}/api/v2/warehouse/receiving-orders/${orderId}`,
       headers: {
-        'Accept': 'application/json'
+        Accept: 'application/json',
       },
-      failOnStatusCode: false
+      failOnStatusCode: false,
     });
   }
 
   // ============================================
   // UTILITY METHODS
   // ============================================
-  
+
   /**
    * Verify API response status
    * @param {Object} response - Cypress response object
@@ -274,23 +288,26 @@ class UserService {
   getNextMonday() {
     const today = new Date();
     const dayOfWeek = today.getDay(); // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
-    
+
     // Calculate days until next Monday
     let daysUntilMonday;
-    if (dayOfWeek === 0) { // Sunday
+    if (dayOfWeek === 0) {
+      // Sunday
       daysUntilMonday = 1; // Next day is Monday
-    } else if (dayOfWeek === 1) { // Monday
+    } else if (dayOfWeek === 1) {
+      // Monday
       daysUntilMonday = 7; // Next Monday is in 7 days
-    } else { // Tuesday to Saturday
+    } else {
+      // Tuesday to Saturday
       daysUntilMonday = 8 - dayOfWeek; // Days until next Monday
     }
-    
+
     const nextMonday = new Date(today);
     nextMonday.setDate(today.getDate() + daysUntilMonday);
-    
+
     // Set time to start of day (00:00:00.000Z)
     nextMonday.setUTCHours(0, 0, 0, 0);
-    
+
     return nextMonday.toISOString();
   }
 
@@ -301,7 +318,7 @@ class UserService {
   getAllLocations() {
     return cy.getAuthTokens().then((tokens) => {
       const headers = {
-        'Accept': 'application/json'
+        Accept: 'application/json',
       };
 
       // Add authorization header if access token is available
@@ -313,7 +330,7 @@ class UserService {
         method: 'GET',
         url: 'https://app.e2e.gcp.logineko.com/api/v2/wms/locations/hierarchy',
         headers: headers,
-        failOnStatusCode: false
+        failOnStatusCode: false,
       });
     });
   }
@@ -325,24 +342,24 @@ class UserService {
    */
   extractLocationData(response) {
     const locations = [];
-    
+
     // Recursive function to traverse the location hierarchy
     const traverseLocationGroups = (locationGroupList) => {
       if (Array.isArray(locationGroupList)) {
-        locationGroupList.forEach(group => {
+        locationGroupList.forEach((group) => {
           // Check if this group has a locationGroup object
           if (group.locationGroup) {
             const locationGroup = group.locationGroup;
-            
+
             // Only include non-deleted locations that have both name and description
             if (!locationGroup.deleted && locationGroup.name && locationGroup.description) {
               locations.push({
                 description: locationGroup.description,
-                locationGroupName: locationGroup.name
+                locationGroupName: locationGroup.name,
               });
             }
           }
-          
+
           // Recursively traverse subGroups if they exist
           if (group.subGroups && Array.isArray(group.subGroups)) {
             traverseLocationGroups(group.subGroups);
@@ -366,7 +383,7 @@ class UserService {
    */
   extractLocationDescriptions(response) {
     const locations = this.extractLocationData(response);
-    return locations.map(location => location.description);
+    return locations.map((location) => location.description);
   }
 
   /**
@@ -377,19 +394,19 @@ class UserService {
     return this.getAllLocations().then((response) => {
       if (response.status === 200) {
         const locations = this.extractLocationData(response);
-        
+
         if (locations.length > 0) {
           // Get a random index
           const randomIndex = Math.floor(Math.random() * locations.length);
           const randomLocation = locations[randomIndex];
-          
+
           // Return the location object directly without cy.log to avoid async/sync mixing
           return randomLocation;
         } else {
-          return { description: "Default Location", locationGroupName: "1B5K" }; // Fallback to default
+          return { description: 'Default Location', locationGroupName: '1B5K' }; // Fallback to default
         }
       } else {
-        return { description: "Default Location", locationGroupName: "1B5K" }; // Fallback to default
+        return { description: 'Default Location', locationGroupName: '1B5K' }; // Fallback to default
       }
     });
   }

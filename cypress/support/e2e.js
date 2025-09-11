@@ -3,4 +3,4 @@
 // ***********************************************
 
 // Import all custom commands
-import './commands'
+import './commands';
