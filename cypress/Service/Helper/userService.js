@@ -1,13 +1,4 @@
-// ***********************************************
-// User Service - API calls for user operations
-// Contains API methods for warehouse operations
-// ***********************************************
-
 class UserService {
-  // ============================================
-  // WAREHOUSE API METHODS
-  // ============================================
-
   /**
    * Create a new receive order from harvest
    * @param {Object} orderData - The order data object
@@ -109,13 +100,6 @@ class UserService {
           offset: 0,
         };
 
-        // Log the request data being sent
-        cy.log('=== CREATE RECEIVE ORDER REQUEST DATA ===');
-        cy.log('Selected random location description:', randomLocation.description);
-        cy.log('Selected random location group name:', randomLocation.locationGroupName);
-        cy.log('Full request payload:', JSON.stringify(orderData, null, 2));
-        cy.log('==========================================');
-
         return this.createReceiveOrder(orderData);
       });
     } else {
@@ -143,13 +127,6 @@ class UserService {
         limit: 40,
         offset: 0,
       };
-
-      // Log the request data being sent
-      cy.log('=== CREATE RECEIVE ORDER REQUEST DATA ===');
-      cy.log('Using provided/fallback location:', finalLocation);
-      cy.log('Full request payload:', JSON.stringify(orderData, null, 2));
-      cy.log('==========================================');
-
       return this.createReceiveOrder(orderData);
     }
   }
@@ -213,38 +190,38 @@ class UserService {
     });
   }
 
-  /**
-   * Update a receiving order
-   * @param {string} orderId - The order ID
-   * @param {Object} updateData - The update data
-   */
-  updateReceivingOrder(orderId, updateData) {
-    return cy.request({
-      method: 'PUT',
-      url: `${Cypress.env('appUrl')}/api/v2/warehouse/receiving-orders/${orderId}`,
-      headers: {
-        'Content-Type': 'application/json',
-        Accept: 'application/json',
-      },
-      body: updateData,
-      failOnStatusCode: false,
-    });
-  }
+  // /**
+  //  * Update a receiving order
+  //  * @param {string} orderId - The order ID
+  //  * @param {Object} updateData - The update data
+  //  */
+  // updateReceivingOrder(orderId, updateData) {
+  //   return cy.request({
+  //     method: 'PUT',
+  //     url: `${Cypress.env('appUrl')}/api/v2/warehouse/receiving-orders/${orderId}`,
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //       Accept: 'application/json',
+  //     },
+  //     body: updateData,
+  //     failOnStatusCode: false,
+  //   });
+  // }
 
-  /**
-   * Delete a receiving order
-   * @param {string} orderId - The order ID
-   */
-  deleteReceivingOrder(orderId) {
-    return cy.request({
-      method: 'DELETE',
-      url: `${Cypress.env('appUrl')}/api/v2/warehouse/receiving-orders/${orderId}`,
-      headers: {
-        Accept: 'application/json',
-      },
-      failOnStatusCode: false,
-    });
-  }
+  // /**
+  //  * Delete a receiving order
+  //  * @param {string} orderId - The order ID
+  //  */
+  // deleteReceivingOrder(orderId) {
+  //   return cy.request({
+  //     method: 'DELETE',
+  //     url: `${Cypress.env('appUrl')}/api/v2/warehouse/receiving-orders/${orderId}`,
+  //     headers: {
+  //       Accept: 'application/json',
+  //     },
+  //     failOnStatusCode: false,
+  //   });
+  // }
 
   // ============================================
   // UTILITY METHODS

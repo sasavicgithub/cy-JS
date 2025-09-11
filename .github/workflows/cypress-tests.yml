@@ -23,7 +23,7 @@ on:
           - warehouse-tests
           - order-creation-tests
       browser:
-        description: 'Browser to run tests in'
+        description: 'Browser to run tests in (Chrome only)'
         required: true
         default: 'chrome'
         type: choice
@@ -39,11 +39,6 @@ on:
 jobs:
   cypress-tests:
     runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        # Run tests on multiple browsers
-        browser: [chrome, firefox, edge]
 
     steps:
       - name: Checkout code
@@ -62,15 +57,15 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ~/.cache/Cypress
-          key: cypress-${{ runner.os }}-${{ matrix.browser }}-${{ hashFiles('package-lock.json') }}
+          key: cypress-${{ runner.os }}-chrome-${{ hashFiles('package-lock.json') }}
           restore-keys: |
-            cypress-${{ runner.os }}-${{ matrix.browser }}-
+            cypress-${{ runner.os }}-chrome-
             cypress-${{ runner.os }}-
 
       - name: Run Cypress tests
         uses: cypress-io/github-action@v6
         with:
-          browser: ${{ matrix.browser }}
+          browser: chrome
           headless: ${{ github.event.inputs.headless == 'true' || github.event_name != 'workflow_dispatch' }}
           spec: ${{ github.event.inputs.test_type == 'map-tests' && 'cypress/e2e/map.spec.js' || github.event.inputs.test_type == 'warehouse-tests' && 'cypress/e2e/warehouse.spec.js' || github.event.inputs.test_type == 'order-creation-tests' && 'cypress/e2e/order-creation.spec.js' || '' }}
           record: false
@@ -95,21 +90,21 @@ jobs:
           CYPRESS_TEST_PASSWORD: ${{ secrets.CYPRESS_TEST_PASSWORD }}
 
       - name: Upload test results
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: cypress-results-${{ matrix.browser }}
+          name: cypress-results-chrome
           path: |
             cypress/screenshots
             cypress/videos
             cypress/reports
           retention-days: 7
-
+      
       - name: Upload test report
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: test-report-${{ matrix.browser }}
+          name: test-report-chrome
           path: cypress/reports/mochawesome-report.html
           retention-days: 30
 

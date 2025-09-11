@@ -32,13 +32,6 @@ class BasePage {
     return cy.get('[href*="/logineko/map"]');
   }
 
-  // ============================================
-  // COMMON METHODS
-  // ============================================
-
-  /**
-   * Verify user is logged in and display user information
-   */
   verifyUserLoggedIn(expectedName = 'E2e Tester') {
     // First check if the element exists
     cy.get('body').then(($body) => {
@@ -60,49 +53,36 @@ class BasePage {
     return this;
   }
 
-  /**
-   * Verify user acronym is displayed
-   */
   verifyUserAcronym(expectedAcronym = 'ET') {
     this.userAcronym.should('be.visible').and('have.text', expectedAcronym);
     return this;
   }
 
-  /**
-   * Verify search input is visible
-   */
   verifySearchInputVisible() {
     this.searchInput.should('be.visible');
     return this;
   }
 
-  /**
-   * Type in search input
-   */
   typeInSearchInput(text) {
     this.searchInput.clear().type(text);
     return this;
   }
 
-  /**
-   * Verify URL contains expected path
-   */
+  typeInMainSearchInput(text) {
+    this.mainSearchInput.clear().type(text);
+    return this;
+  }
+
   verifyUrlContains(expectedPath) {
     cy.url().should('include', expectedPath);
     return this;
   }
 
-  /**
-   * Navigate to map page
-   */
   navigateToMap() {
     this.mapLink.click();
     return this;
   }
 
-  /**
-   * Handle uncaught exceptions (like Keycloak iframe postMessage errors)
-   */
   handleUncaughtExceptions() {
     cy.on('uncaught:exception', (err) => {
       // Ignore postMessage errors from Keycloak iframe
@@ -114,36 +94,33 @@ class BasePage {
     return this;
   }
 
-  /**
-   * Check if user is logged in by looking for various indicators
-   */
-  checkUserLoginStatus() {
-    cy.get('body').then(($body) => {
-      // Check for user element
-      if ($body.find('[test-logged-in-user]').length > 0) {
-        cy.log('✅ User element found - user is logged in');
-        return true;
-      }
+  // checkUserLoginStatus() {
+  //   cy.get('body').then(($body) => {
+  //     // Check for user element
+  //     if ($body.find('[test-logged-in-user]').length > 0) {
+  //       cy.log('✅ User element found - user is logged in');
+  //       return true;
+  //     }
 
-      // Check for user acronym
-      if ($body.find('[test-user-acronym]').length > 0) {
-        cy.log('✅ User acronym found - user is logged in');
-        return true;
-      }
+  //     // Check for user acronym
+  //     if ($body.find('[test-user-acronym]').length > 0) {
+  //       cy.log('✅ User acronym found - user is logged in');
+  //       return true;
+  //     }
 
-      // Check if we're on auth page (not logged in)
-      cy.url().then((url) => {
-        if (url.includes('auth.e2e.gcp.logineko.com')) {
-          cy.log('❌ User is not logged in - on auth page');
-          return false;
-        } else {
-          cy.log('✅ User appears to be logged in (not on auth page)');
-          return true;
-        }
-      });
-    });
-    return this;
-  }
+  //     // Check if we're on auth page (not logged in)
+  //     cy.url().then((url) => {
+  //       if (url.includes('auth.e2e.gcp.logineko.com')) {
+  //         cy.log('❌ User is not logged in - on auth page');
+  //         return false;
+  //       } else {
+  //         cy.log('✅ User appears to be logged in (not on auth page)');
+  //         return true;
+  //       }
+  //     });
+  //   });
+  //   return this;
+  // }
 }
 
 // Export the class
