@@ -1,14 +1,4 @@
-// ***********************************************
-// Base Page Object Model
-// Contains common locators and methods for all pages
-// ***********************************************
-
 class BasePage {
-  // ============================================
-  // COMMON LOCATORS
-  // ============================================
-
-  // User authentication elements
   get loggedInUser() {
     return cy.get('[test-logged-in-user]');
   }
@@ -33,23 +23,8 @@ class BasePage {
   }
 
   verifyUserLoggedIn(expectedName = 'E2e Tester') {
-    // First check if the element exists
-    cy.get('body').then(($body) => {
-      if ($body.find('[test-logged-in-user]').length > 0) {
-        this.loggedInUser.should('be.visible');
-        this.userLabel.should('be.visible').and('contain.text', expectedName);
-      } else {
-        cy.log('⚠️ User element not found - checking if user is logged in via other means');
-        // Alternative: check if we're redirected to login page
-        cy.url().then((url) => {
-          if (url.includes('auth.e2e.gcp.logineko.com')) {
-            throw new Error('User is not logged in - redirected to auth page');
-          } else {
-            cy.log('✅ User appears to be logged in (no auth redirect)');
-          }
-        });
-      }
-    });
+    cy.url().should('not.include', 'auth.e2e.gcp.logineko.com');
+    this.userLabel.scrollIntoView().should('be.visible').and('contain.text', expectedName);
     return this;
   }
 
@@ -93,34 +68,6 @@ class BasePage {
     });
     return this;
   }
-
-  // checkUserLoginStatus() {
-  //   cy.get('body').then(($body) => {
-  //     // Check for user element
-  //     if ($body.find('[test-logged-in-user]').length > 0) {
-  //       cy.log('✅ User element found - user is logged in');
-  //       return true;
-  //     }
-
-  //     // Check for user acronym
-  //     if ($body.find('[test-user-acronym]').length > 0) {
-  //       cy.log('✅ User acronym found - user is logged in');
-  //       return true;
-  //     }
-
-  //     // Check if we're on auth page (not logged in)
-  //     cy.url().then((url) => {
-  //       if (url.includes('auth.e2e.gcp.logineko.com')) {
-  //         cy.log('❌ User is not logged in - on auth page');
-  //         return false;
-  //       } else {
-  //         cy.log('✅ User appears to be logged in (not on auth page)');
-  //         return true;
-  //       }
-  //     });
-  //   });
-  //   return this;
-  // }
 }
 
 // Export the class

@@ -45,7 +45,7 @@ class UserService {
 
       return cy.request({
         method: 'POST',
-        url: `https://app.e2e.gcp.logineko.com/api/v2/wms/receiving-orders`,
+        url: `${Cypress.env('baseUrl')}/api/v2/wms/receiving-orders`,
         headers: headers,
         body: payload,
         failOnStatusCode: false,
@@ -146,7 +146,7 @@ class UserService {
 
       return cy.request({
         method: 'OPTIONS',
-        url: `https://app.e2e.gcp.logineko.com/api/v2/wms/receiving-orders`,
+        url: `${Cypress.env('baseUrl')}/api/v2/wms/receiving-orders`,
         headers: headers,
         failOnStatusCode: false,
       });
@@ -168,7 +168,7 @@ class UserService {
 
       return cy.request({
         method: 'GET',
-        url: `https://app.e2e.gcp.logineko.com/api/v2/wms/receiving-orders`,
+        url: `${Cypress.env('baseUrl')}/api/v2/wms/receiving-orders`,
         headers: headers,
         failOnStatusCode: false,
       });
@@ -182,7 +182,7 @@ class UserService {
   getReceivingOrderById(orderId) {
     return cy.request({
       method: 'GET',
-      url: `${Cypress.env('appUrl')}/api/v2/warehouse/receiving-orders/${orderId}`,
+      url: `${Cypress.env('baseUrl')}/api/v2/warehouse/receiving-orders/${orderId}`,
       headers: {
         Accept: 'application/json',
       },
@@ -305,7 +305,7 @@ class UserService {
 
       return cy.request({
         method: 'GET',
-        url: 'https://app.e2e.gcp.logineko.com/api/v2/wms/locations/hierarchy',
+        url: `${Cypress.env('baseUrl')}/api/v2/wms/locations/hierarchy`,
         headers: headers,
         failOnStatusCode: false,
       });

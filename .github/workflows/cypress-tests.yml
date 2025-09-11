@@ -68,16 +68,16 @@ jobs:
           # Cypress Dashboard (optional)
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
           CYPRESS_PROJECT_ID: ${{ secrets.CYPRESS_PROJECT_ID }}
-          
+
           # Application URLs
           CYPRESS_BASE_URL: ${{ secrets.CYPRESS_BASE_URL }}
-          
+
           # Authentication
           CYPRESS_AUTH_BASE_URL: ${{ secrets.CYPRESS_AUTH_BASE_URL }}
           CYPRESS_REALM: ${{ secrets.CYPRESS_REALM }}
           CYPRESS_CLIENT_ID: ${{ secrets.CYPRESS_CLIENT_ID }}
           CYPRESS_APP_URL: ${{ secrets.CYPRESS_APP_URL }}
-          
+
           # Test User Credentials
           CYPRESS_TEST_USERNAME: ${{ secrets.CYPRESS_TEST_USERNAME }}
           CYPRESS_TEST_PASSWORD: ${{ secrets.CYPRESS_TEST_PASSWORD }}
@@ -92,7 +92,7 @@ jobs:
             cypress/videos
             cypress/reports
           retention-days: 7
-      
+
       - name: Upload test report
         uses: actions/upload-artifact@v4
         if: always()

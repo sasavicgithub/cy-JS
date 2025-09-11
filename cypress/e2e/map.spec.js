@@ -81,6 +81,10 @@ describe('Logineko Application Tests', () => {
             warehousePage.verifyCreatedOrderNumber(orderNumber);
           } else {
             cy.log('Unexpected status code:', response.status);
+            cy.log('Response body:', JSON.stringify(response.body));
+            if (response.status === 405) {
+              cy.log('⚠️ Method Not Allowed - API endpoint may not support POST requests');
+            }
             expect(response.status).to.be.oneOf([200, 201, 202]);
           }
         });

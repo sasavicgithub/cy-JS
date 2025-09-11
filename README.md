@@ -17,48 +17,73 @@ This project contains end-to-end (E2E) tests for the LoginEKO application using 
 
 Before running this project, ensure you have the following installed:
 
-- **Node.js** (version 16 or higher)
+- **Node.js** (version 18 or higher - required for Cypress 15.1.0)
 - **npm** (comes with Node.js)
 - **Git**
 
 ## 📦 Installation
 
 1. **Clone the repository:**
+
    ```bash
    git clone <repository-url>
    cd login_cy
    ```
 
 2. **Install dependencies:**
-```bash
-npm install
-```
+
+   ```bash
+   npm install
+   ```
 
 3. **Install Cypress (if not already installed):**
+
    ```bash
    npx cypress install
+   ```
+
+4. **Set up environment variables:**
+
+   ```bash
+   # Copy the example environment file
+   cp .envExample .env
+
+   # Edit .env with your actual credentials
+   # (See Configuration section for details)
+   ```
+
+5. **Verify installation:**
+   ```bash
+   # Run a quick test to verify everything is working
+   npx cypress run --spec "cypress/e2e/map.spec.js"
    ```
 
 ## ⚙️ Configuration
 
 ### Environment Variables
 
-The project uses environment variables for configuration. These are set in `cypress.config.js`:
+The project uses environment variables for configuration. These are automatically loaded from GitHub Secrets in CI/CD or can be set locally:
 
-```javascript
-env: {
-  authBaseUrl: 'https://auth.e2e.gcp.logineko.com',
-  realm: 'logineko',
-  clientId: 'frontend-vue',
-  appUrl: 'https://app.e2e.gcp.logineko.com/logineko',
-  testUsername: 'e2e_tester',
-  testPassword: '9msMWtvlDp6MoJFdvI5fEAqDm4aBhiZW'
-}
+**For Local Development:**
+Create a `.env` file in the project root:
+
+```bash
+CYPRESS_BASE_URL=https://app.e2e.gcp.logineko.com
+CYPRESS_AUTH_BASE_URL=https://auth.e2e.gcp.logineko.com
+CYPRESS_REALM=logineko
+CYPRESS_CLIENT_ID=frontend-vue
+CYPRESS_APP_URL=https://app.e2e.gcp.logineko.com/logineko
+CYPRESS_TEST_USERNAME=e2e_tester
+CYPRESS_TEST_PASSWORD=your_test_password
 ```
+
+**For CI/CD:**
+Set these as GitHub Secrets in your repository settings.
 
 ### Cypress Configuration
 
 The main configuration is in `cypress.config.js`:
+
 - **Base URL:** `https://app.e2e.gcp.logineko.com`
 - **Viewport:** 1280x720
 - **Timeouts:** 10 seconds for commands, requests, and responses
@@ -73,6 +98,7 @@ npx cypress open
 ```
 
 This opens the Cypress Test Runner where you can:
+
 - Select tests to run
 - Watch tests execute in real-time
 - Debug tests interactively
@@ -132,15 +158,18 @@ login_cy/
 │   └── workflows/
 │       └── cypress-tests.yml  # GitHub Actions workflow
 ├── cypress.config.js          # Cypress configuration
-├── eslint.config.mjs          # ESLint configuration
+├── eslint.config.mjs          # ESLint configuration (flat config)
 ├── .prettierrc               # Prettier configuration
 ├── .gitignore               # Git ignore rules
+├── .env                     # Environment variables (local development)
+├── .envExample              # Example environment variables
 └── package.json             # Project dependencies
 ```
 
 ## 🧪 Test Scenarios
 
 ### 1. Map Page Tests
+
 - **Purpose:** Verify user authentication and map page functionality
 - **File:** `cypress/e2e/map.spec.js`
 - **Tests:**
@@ -149,6 +178,7 @@ login_cy/
   - User information verification
 
 ### 2. Warehouse Page Tests
+
 - **Purpose:** Test warehouse receive page functionality
 - **File:** `cypress/e2e/map.spec.js`
 - **Tests:**
@@ -157,13 +187,15 @@ login_cy/
   - Search input visibility
 
 ### 3. Order Creation and Search Tests
+
 - **Purpose:** Test API integration and order management
 - **File:** `cypress/e2e/map.spec.js`
 - **Tests:**
-  - Create receive orders via API
-  - Random location selection
-  - Order search functionality
-  - Order status verification
+  - Create receive orders via API with dynamic location selection
+  - Fetch available locations from API and randomly select one
+  - Order search functionality on warehouse page
+  - Order status verification ("To-Do" status)
+  - Cross-test data sharing using Cypress aliases
 
 ## 🔄 CI/CD
 
@@ -172,25 +204,39 @@ login_cy/
 The project includes a GitHub Actions workflow (`.github/workflows/cypress-tests.yml`) that:
 
 - **Triggers:** Push to main/master, pull requests, manual dispatch
-- **Browsers:** Chrome, Firefox, Edge
+- **Browser:** Chrome (optimized for headless mode)
 - **Features:**
-  - Multi-browser testing
+  - Automated test execution
   - Artifact upload (screenshots, videos, reports)
   - Caching for faster builds
   - Security and lint checks
+  - Environment variable management via GitHub Secrets
 
 ### Manual Trigger Options
 
 When triggering manually from GitHub Actions, you can choose:
+
 - **Test Type:** all, map-tests, warehouse-tests, order-creation-tests
-- **Browser:** chrome, firefox, edge, electron
-- **Headless Mode:** true/false
+- **Browser:** chrome (only)
+
+### Required GitHub Secrets
+
+Set these secrets in your GitHub repository settings:
+
+- `CYPRESS_BASE_URL`
+- `CYPRESS_AUTH_BASE_URL`
+- `CYPRESS_REALM`
+- `CYPRESS_CLIENT_ID`
+- `CYPRESS_APP_URL`
+- `CYPRESS_TEST_USERNAME`
+- `CYPRESS_TEST_PASSWORD`
 
 ## 🛠️ Development
 
 ### Code Quality
 
 The project uses:
+
 - **ESLint** for code linting
 - **Prettier** for code formatting
 - **Cypress ESLint Plugin** for Cypress-specific rules
@@ -211,6 +257,7 @@ npx prettier --write cypress/
 ### Page Object Model
 
 The project follows the Page Object Model pattern:
+
 - **BasePage:** Common functionality and locators
 - **MapPage:** Map-specific page interactions
 - **WarehousePage:** Warehouse page interactions
@@ -221,24 +268,31 @@ The project follows the Page Object Model pattern:
 ### Common Issues
 
 1. **Authentication Failures:**
-   - Verify test credentials in `cypress.config.js`
+   - Verify test credentials in environment variables
    - Check if the test environment is accessible
    - Ensure Keycloak authentication is working
+   - Verify GitHub Secrets are properly set for CI/CD
 
 2. **Test Timeouts:**
-   - Increase timeout values in `cypress.config.js`
+   - Tests now use progressive loading with proper timeouts (15s for table loading)
    - Check network connectivity
    - Verify application response times
 
-3. **Element Not Found:**
-   - Update selectors in page objects
-   - Add proper waits for dynamic content
-   - Check if the application UI has changed
+3. **Element Not Found (Warehouse Page):**
+   - Tests now use stable selectors based on actual HTML structure
+   - Progressive loading ensures table data is fully loaded before verification
+   - Selectors: `.table__row .cell__text` for order numbers, `.table__row .cell--status .cell__text` for status
 
 4. **API Failures:**
    - Verify API endpoints are accessible
    - Check authentication tokens
    - Review API response formats
+   - Location API now properly handles nested response structure
+
+5. **GitHub Actions Issues:**
+   - Ensure all required secrets are set in repository settings
+   - Check Node.js version compatibility (18+ required for Cypress 15.1.0)
+   - Verify workflow file syntax and permissions
 
 ### Debug Mode
 
@@ -262,10 +316,8 @@ npx cypress run --spec "cypress/e2e/map.spec.js" --headed
 ## 📊 Test Reports
 
 Test results are available in:
+
 - **Cypress Test Runner:** Real-time results
 - **Terminal Output:** Summary after headless runs
 - **GitHub Actions:** Detailed reports in CI/CD
 - **Artifacts:** Screenshots and videos uploaded to GitHub
-
-
-

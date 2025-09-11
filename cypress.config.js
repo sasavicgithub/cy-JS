@@ -16,6 +16,8 @@ module.exports = defineConfig({
     chromeWebSecurity: false, // Required for cross-origin requests
     specPattern: 'cypress/e2e/**/*.{cy,spec}.{js,ts}',
     env: {
+      // Base URL for API calls
+      baseUrl: process.env.CYPRESS_BASE_URL || 'https://app.e2e.gcp.logineko.com',
       // Environment variables for authentication
       authBaseUrl: process.env.CYPRESS_AUTH_BASE_URL || 'https://auth.e2e.gcp.logineko.com',
       realm: process.env.CYPRESS_REALM || 'logineko',
