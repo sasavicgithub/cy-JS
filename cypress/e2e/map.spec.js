@@ -72,7 +72,7 @@ describe('Logineko Application Tests', () => {
             cy.wrap(orderNumber).as('createdOrderNumber');
 
             // Navigate to warehouse page and verify order exists
-            warehousePage.visitWarehouseReceivePage();
+            warehousePage.handleUncaughtExceptions().visitWarehouseReceivePage();
 
             // Wait for the page to fully load
             cy.url().should('include', 'warehouse/receive');
@@ -95,11 +95,11 @@ describe('Logineko Application Tests', () => {
       const orderNumber = this.createdOrderNumber;
 
       // Navigate to warehouse page
-      warehousePage.visitWarehouseReceivePage();
+      warehousePage.handleUncaughtExceptions().visitWarehouseReceivePage();
 
       // Wait for the page to fully load
       cy.url().should('include', 'warehouse/receive');
-      cy.wait(3000); // Give time for data to load
+      cy.get('body').should('be.visible');
 
       // Search for the order using the search input
       warehousePage.searchCreatedOrderNumber(orderNumber);
