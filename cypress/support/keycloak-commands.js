@@ -29,12 +29,19 @@ Cypress.Commands.add('keycloakLogin', (username, password, redirectUrl = Cypress
       followRedirect: false,
     })
     .then((response) => {
+      // Debug logging
+      cy.log('Keycloak auth response status:', response.status);
+      cy.log('Keycloak auth response headers:', JSON.stringify(response.headers));
+      cy.log('Keycloak auth response body type:', typeof response.body);
+
       // Extract session parameters from the auth response
       const authUrl = response.headers.location || response.url;
+      cy.log('Extracted auth URL:', authUrl);
 
       if (!authUrl) {
         // If no redirect, the response might contain the login form directly
         cy.log('No redirect received, checking response body for login form');
+        cy.log('Response body sample:', JSON.stringify(response.body).substring(0, 500));
 
         // Try to extract session parameters from the response body
         const body = response.body;
@@ -138,7 +145,6 @@ Cypress.Commands.add('keycloakLogin', (username, password, redirectUrl = Cypress
         // Extract authorization code from redirect URL
         const codeMatch = redirectLocation.match(/code=([^&]+)/);
         const stateMatch = redirectLocation.match(/state=([^&]+)/);
-        const sessionStateMatch = redirectLocation.match(/session_state=([^&]+)/);
 
         if (!codeMatch) {
           throw new Error('Could not extract authorization code from redirect');
@@ -254,6 +260,13 @@ Cypress.Commands.add('setupAuthenticatedSession', () => {
   const mapUrl = appUrl + '/map';
 
   cy.log('🔐 Setting up authenticated session...');
+  cy.log('Environment variables loaded:');
+  cy.log('Username:', username ? '***' : 'UNDEFINED');
+  cy.log('Password:', password ? '***' : 'UNDEFINED');
+  cy.log('App URL:', appUrl);
+  cy.log('Auth Base URL:', Cypress.env('authBaseUrl'));
+  cy.log('Realm:', Cypress.env('realm'));
+  cy.log('Client ID:', Cypress.env('clientId'));
 
   // Perform Keycloak login with map URL as redirect
   cy.keycloakLogin(username, password, mapUrl).then(() => {

@@ -46,7 +46,7 @@ npm install
 
    ```bash
    # Copy the example environment file
-   cp .envExample .env
+   cp cypress/fixtures/.envExample .env
 
    # Edit .env with your actual credentials
    # (See Configuration section for details)

@@ -1,4 +1,5 @@
 const { defineConfig } = require('cypress');
+require('dotenv').config();
 
 module.exports = defineConfig({
   e2e: {
@@ -17,15 +18,16 @@ module.exports = defineConfig({
     specPattern: 'cypress/e2e/**/*.{cy,spec}.{js,ts}',
     env: {
       // Base URL for API calls
-      baseUrl: process.env.CYPRESS_BASE_URL || 'https://app.e2e.gcp.logineko.com',
-      // Environment variables for authentication
-      authBaseUrl: process.env.CYPRESS_AUTH_BASE_URL || 'https://auth.e2e.gcp.logineko.com',
-      realm: process.env.CYPRESS_REALM || 'logineko',
-      clientId: process.env.CYPRESS_CLIENT_ID || 'frontend-vue',
-      appUrl: process.env.CYPRESS_APP_URL || 'https://app.e2e.gcp.logineko.com/logineko',
-      // Test user credentials
-      testUsername: process.env.CYPRESS_TEST_USERNAME || 'e2e_tester',
-      testPassword: process.env.CYPRESS_TEST_PASSWORD || '9msMWtvlDp6MoJFdvI5fEAqDm4aBhiZW',
+      baseUrl: process.env.CYPRESS_BASE_URL,
+      // Authentication URLs
+      authBaseUrl: process.env.CYPRESS_AUTH_BASE_URL,
+      appUrl: process.env.CYPRESS_APP_URL,
+      // Keycloak Configuration
+      realm: process.env.CYPRESS_REALM,
+      clientId: process.env.CYPRESS_CLIENT_ID,
+      // Test User Credentials
+      testUsername: process.env.CYPRESS_TEST_USERNAME,
+      testPassword: process.env.CYPRESS_TEST_PASSWORD,
     },
   },
 });
