@@ -1,0 +1,10 @@
+CYPRESS_BASE_URL=https://app.e2e.gcp.logineko.com
+
+CYPRESS_AUTH_BASE_URL=https://auth.e2e.gcp.logineko.com
+CYPRESS_APP_URL=https://app.e2e.gcp.logineko.com/logineko
+
+CYPRESS_REALM=logineko
+CYPRESS_CLIENT_ID=frontend-vue
+
+CYPRESS_TEST_USERNAME=username
+CYPRESS_TEST_PASSWORD=password

@@ -46,7 +46,7 @@ npm install
 
    ```bash
    # Copy the example environment file
-   cp cypress/fixtures/.envExample .env
+   cp .envExample .env
 
    # Edit .env with your actual credentials
    # (See Configuration section for details)
@@ -68,11 +68,18 @@ The project uses environment variables for configuration. These are automaticall
 Create a `.env` file in the project root:
 
 ```bash
+# Base URL for API calls
 CYPRESS_BASE_URL=https://app.e2e.gcp.logineko.com
+
+# Authentication URLs
 CYPRESS_AUTH_BASE_URL=https://auth.e2e.gcp.logineko.com
+CYPRESS_APP_URL=https://app.e2e.gcp.logineko.com/logineko
+
+# Keycloak Configuration
 CYPRESS_REALM=logineko
 CYPRESS_CLIENT_ID=frontend-vue
-CYPRESS_APP_URL=https://app.e2e.gcp.logineko.com/logineko
+
+# Test User Credentials (REQUIRED - no fallbacks)
 CYPRESS_TEST_USERNAME=e2e_tester
 CYPRESS_TEST_PASSWORD=your_test_password
 ```
@@ -141,8 +148,6 @@ login_cy/
 ├── cypress/
 │   ├── e2e/                    # Test files
 │   │   └── map.spec.js        # Main test suite
-│   ├── fixtures/              # Test data
-│   │   └── example.json
 │   ├── pages/                 # Page Object Model
 │   │   ├── basePage.js        # Base page class
 │   │   ├── mapPage.js         # Map page object
@@ -191,11 +196,12 @@ login_cy/
 - **Purpose:** Test API integration and order management
 - **File:** `cypress/e2e/map.spec.js`
 - **Tests:**
-  - Create receive orders via API with dynamic location selection
-  - Fetch available locations from API and randomly select one
-  - Order search functionality on warehouse page
-  - Order status verification ("To-Do" status)
-  - Cross-test data sharing using Cypress aliases
+  - ✅ Create receive orders via API with dynamic location selection
+  - ✅ Fetch available locations from API and randomly select one
+  - ✅ Order search functionality on warehouse page
+  - ✅ Order status verification ("To-Do" status)
+  - ✅ Cross-test data sharing using Cypress aliases
+  - ✅ All tests passing locally (4/4 tests successful)
 
 ## 🔄 CI/CD
 
@@ -240,6 +246,7 @@ The project uses:
 - **ESLint** for code linting
 - **Prettier** for code formatting
 - **Cypress ESLint Plugin** for Cypress-specific rules
+- **dotenv** for environment variable loading
 
 ### Running Linters
 
