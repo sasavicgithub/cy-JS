@@ -72,11 +72,13 @@ describe('Logineko Application Tests', () => {
             cy.wrap(orderNumber).as('createdOrderNumber');
 
             // Navigate to warehouse page and verify order exists
+            cy.log('Navigating to warehouse page to verify order:', orderNumber);
             warehousePage.handleUncaughtExceptions().visitWarehouseReceivePage();
 
             // Wait for the page to fully load
             cy.url().should('include', 'warehouse/receive');
             cy.get('body').should('be.visible');
+            cy.log('Successfully navigated to warehouse page');
 
             warehousePage.verifyCreatedOrderNumber(orderNumber);
           } else {
@@ -93,6 +95,7 @@ describe('Logineko Application Tests', () => {
     it('should search for the previously created order', function () {
       // Get the order number from the previous test
       const orderNumber = this.createdOrderNumber;
+      cy.log('Searching for order number:', orderNumber);
 
       // Navigate to warehouse page
       warehousePage.handleUncaughtExceptions().visitWarehouseReceivePage();
