@@ -25,7 +25,7 @@ export const testData = {
   // Test user data
   user: {
     userId: 'e2e_tester',
-    organization: 'logineko',
+    organization: 'example-org',
   },
 
   // UI elements and text

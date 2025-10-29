@@ -1,5 +1,5 @@
 // ***********************************************
-// Custom commands for Logineko authentication
+// Custom commands for application authentication
 // ***********************************************
 
 // Import consolidated Keycloak commands

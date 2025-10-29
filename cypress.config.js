@@ -31,7 +31,7 @@ module.exports = defineConfig({
     },
 
     // Environment configuration
-    baseUrl: process.env.CYPRESS_BASE_URL || 'https://app.e2e.gcp.logineko.com',
+    baseUrl: process.env.CYPRESS_BASE_URL || 'https://app.example.com',
 
     // Viewport configuration
     viewportWidth: 1280,

@@ -6,7 +6,7 @@ class MapPage extends BasePage {
     return this;
   }
   verifyMapPageLoaded() {
-    this.verifyUrlContains('app.e2e.gcp.logineko.com/logineko/map');
+    this.verifyUrlContains('app.example.com/map');
     return this;
   }
 

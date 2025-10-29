@@ -1,20 +1,20 @@
 // Environment-specific configurations
 export const environments = {
   development: {
-    baseUrl: 'https://app.dev.gcp.logineko.com',
-    authUrl: 'https://auth.dev.gcp.logineko.com',
+    baseUrl: 'https://app.dev.example.com',
+    authUrl: 'https://auth.dev.example.com',
     timeout: 10000,
     retries: 2,
   },
   staging: {
-    baseUrl: 'https://app.staging.gcp.logineko.com',
-    authUrl: 'https://auth.staging.gcp.logineko.com',
+    baseUrl: 'https://app.staging.example.com',
+    authUrl: 'https://auth.staging.example.com',
     timeout: 15000,
     retries: 3,
   },
   production: {
-    baseUrl: 'https://app.e2e.gcp.logineko.com',
-    authUrl: 'https://auth.e2e.gcp.logineko.com',
+    baseUrl: 'https://app.production.example.com',
+    authUrl: 'https://auth.production.example.com',
     timeout: 20000,
     retries: 5,
   },

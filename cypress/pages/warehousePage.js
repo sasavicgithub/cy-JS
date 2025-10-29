@@ -15,7 +15,7 @@ class WarehousePage extends BasePage {
     cy.url().should('include', 'warehouse/receive');
     cy.get('body').should('be.visible');
     cy.get('.loading, .spinner, [data-testid*="loading"]', { timeout: 10000 }).should('not.exist');
-    cy.get('body').should('not.contain.text', 'LoginEKO Map');
+    cy.get('body').should('not.contain.text', 'Map');
     this.waitForTableToLoad();
     return this;
   }

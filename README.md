@@ -1,6 +1,6 @@
-# LoginEKO Cypress E2E Testing Project
+# Cypress E2E Testing Project
 
-This project contains end-to-end (E2E) tests for the LoginEKO application using Cypress testing framework.
+This project contains end-to-end (E2E) tests demonstrating best practices for Cypress testing framework.
 
 ## 📋 Table of Contents
 
@@ -72,14 +72,14 @@ Create a `.env` file in the project root:
 
 ```bash
 # Base URL for API calls
-CYPRESS_BASE_URL=https://app.e2e.gcp.logineko.com
+CYPRESS_BASE_URL=https://app.example.com
 
 # Authentication URLs
-CYPRESS_AUTH_BASE_URL=https://auth.e2e.gcp.logineko.com
-CYPRESS_APP_URL=https://app.e2e.gcp.logineko.com/logineko
+CYPRESS_AUTH_BASE_URL=https://auth.example.com
+CYPRESS_APP_URL=https://app.example.com/api
 
 # Keycloak Configuration
-CYPRESS_REALM=logineko
+CYPRESS_REALM=your-realm
 CYPRESS_CLIENT_ID=frontend-vue
 
 # Test User Credentials (REQUIRED - no fallbacks)
@@ -94,7 +94,7 @@ Set these as GitHub Secrets in your repository settings.
 
 The main configuration is in `cypress.config.js`:
 
-- **Base URL:** `https://app.e2e.gcp.logineko.com` (configurable via environment variables)
+- **Base URL:** `https://app.example.com` (configurable via environment variables)
 - **Viewport:** 1280x720
 - **Timeouts:** 
   - Command timeout: 15 seconds (configurable)
@@ -167,7 +167,7 @@ npx cypress run --config viewportWidth=1920,viewportHeight=1080
 
 ```bash
 # Run tests with custom base URL
-npx cypress run --config baseUrl=https://staging.app.logineko.com
+npx cypress run --config baseUrl=https://staging.app.example.com
 
 # Run tests with custom timeout
 npx cypress run --config defaultCommandTimeout=15000

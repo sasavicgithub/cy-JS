@@ -10,7 +10,7 @@ export class TestUtils {
   }
 
   static generateRandomEmail() {
-    return `test-${this.generateRandomString()}@logineko.com`;
+    return `test-${this.generateRandomString()}@example.com`;
   }
 
   static generateRandomNumber(min = 1, max = 1000) {

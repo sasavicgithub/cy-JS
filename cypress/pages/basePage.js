@@ -19,11 +19,11 @@ class BasePage {
 
   // Navigation elements
   get mapLink() {
-    return cy.get('[href*="/logineko/map"]');
+    return cy.get('[href*="/map"]');
   }
 
   verifyUserLoggedIn(expectedName = 'E2e Tester') {
-    cy.url().should('not.include', 'auth.e2e.gcp.logineko.com');
+    cy.url().should('not.include', 'auth.example.com');
     this.userLabel.scrollIntoView().should('be.visible').and('contain.text', expectedName);
     return this;
   }

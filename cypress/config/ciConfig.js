@@ -18,7 +18,7 @@ export const ciConfig = {
   // Environment-specific configurations
   environments: {
     ci: {
-      baseUrl: 'https://app.e2e.gcp.logineko.com',
+      baseUrl: 'https://app.ci.example.com',
       timeout: 30000,
       retries: 2,
       video: true,
@@ -26,7 +26,7 @@ export const ciConfig = {
       headless: true,
     },
     local: {
-      baseUrl: 'https://app.dev.gcp.logineko.com',
+      baseUrl: 'https://app.local.example.com',
       timeout: 15000,
       retries: 1,
       video: false,

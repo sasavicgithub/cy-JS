@@ -1,6 +1,6 @@
 // ***********************************************
 // Keycloak Authentication Commands
-// Consolidated authentication commands for Logineko
+// Consolidated authentication commands for application
 // ***********************************************
 
 /**
@@ -175,7 +175,7 @@ Cypress.Commands.add('keycloakLogin', (username, password, redirectUrl = Cypress
             // Set cookies to maintain session
             if (tokens.id_token) {
               cy.setCookie('KEYCLOAK_IDENTITY', tokens.id_token, {
-                domain: '.e2e.gcp.logineko.com',
+                domain: '.example.com',
                 secure: true,
                 httpOnly: true,
                 sameSite: 'none',
@@ -183,7 +183,7 @@ Cypress.Commands.add('keycloakLogin', (username, password, redirectUrl = Cypress
             }
 
             cy.setCookie('KEYCLOAK_SESSION', 'authenticated', {
-              domain: '.e2e.gcp.logineko.com',
+              domain: '.example.com',
               secure: true,
               sameSite: 'none',
             });
@@ -274,7 +274,7 @@ Cypress.Commands.add('setupAuthenticatedSession', () => {
 
     // Verify we can access the app
     cy.visit(mapUrl);
-    cy.url().should('include', 'app.e2e.gcp.logineko.com');
+    cy.url().should('include', 'app.example.com');
 
     cy.keycloakIn();
 
