@@ -55,7 +55,7 @@ npm install
 5. **Verify installation:**
    ```bash
    # Run a quick test to verify everything is working
-   npx cypress run --spec "cypress/e2e/map.spec.js"
+   npx cypress run --spec "cypress/e2e/map-page.spec.js"
    ```
 
 ## ⚙️ Configuration
@@ -117,7 +117,10 @@ This opens the Cypress Test Runner where you can:
 npx cypress run
 
 # Run specific test file
-npx cypress run --spec "cypress/e2e/map.spec.js"
+npx cypress run --spec "cypress/e2e/map-page.spec.js"
+
+# Run all test files
+npx cypress run --spec "cypress/e2e/*.spec.js"
 
 # Run tests in specific browser
 npx cypress run --browser chrome
@@ -146,8 +149,13 @@ npx cypress run --config defaultCommandTimeout=15000
 ```
 login_cy/
 ├── cypress/
-│   ├── e2e/                    # Test files
-│   │   └── map.spec.js        # Main test suite
+│   ├── e2e/                    # Test files (AAA pattern)
+│   │   ├── map-page.spec.js    # Map page tests
+│   │   ├── warehouse-page.spec.js # Warehouse page tests
+│   │   ├── order-creation.spec.js # Order creation tests
+│   │   └── order-search.spec.js   # Order search tests
+│   ├── fixtures/               # Test data
+│   │   └── testData.js         # Centralized test data
 │   ├── pages/                 # Page Object Model
 │   │   ├── basePage.js        # Base page class
 │   │   ├── mapPage.js         # Map page object
@@ -173,10 +181,22 @@ login_cy/
 
 ## 🧪 Test Scenarios
 
+### Test Organization (AAA Pattern)
+
+All tests follow the **Arrange, Act, Assert** pattern for better readability and maintainability:
+
+```javascript
+it('should do something', () => {
+  // Arrange - Set up test data and preconditions
+  // Act - Execute the action being tested  
+  // Assert - Verify the expected outcomes
+});
+```
+
 ### 1. Map Page Tests
 
 - **Purpose:** Verify user authentication and map page functionality
-- **File:** `cypress/e2e/map.spec.js`
+- **File:** `cypress/e2e/map-page.spec.js`
 - **Tests:**
   - User login and authentication
   - Map page loading and display
@@ -185,22 +205,30 @@ login_cy/
 ### 2. Warehouse Page Tests
 
 - **Purpose:** Test warehouse receive page functionality
-- **File:** `cypress/e2e/map.spec.js`
+- **File:** `cypress/e2e/warehouse-page.spec.js`
 - **Tests:**
   - Warehouse page navigation
   - User authentication verification
   - Search input visibility
 
-### 3. Order Creation and Search Tests
+### 3. Order Creation Tests
 
-- **Purpose:** Test API integration and order management
-- **File:** `cypress/e2e/map.spec.js`
+- **Purpose:** Test API integration for order creation
+- **File:** `cypress/e2e/order-creation.spec.js`
 - **Tests:**
   - ✅ Create receive orders via API with dynamic location selection
-  - ✅ Fetch available locations from API and randomly select one
+  - ✅ Fetch available locations from API and log available data
+  - ✅ Order creation verification and navigation to warehouse page
+  - ✅ Cross-test data sharing using Cypress aliases
+
+### 4. Order Search Tests
+
+- **Purpose:** Test order search functionality
+- **File:** `cypress/e2e/order-search.spec.js`
+- **Tests:**
   - ✅ Order search functionality on warehouse page
   - ✅ Order status verification ("To-Do" status)
-  - ✅ Cross-test data sharing using Cypress aliases
+  - ✅ Order number verification
   - ✅ All tests passing locally (4/4 tests successful)
 
 ## 🔄 CI/CD
@@ -222,7 +250,7 @@ The project includes a GitHub Actions workflow (`.github/workflows/cypress-tests
 
 When triggering manually from GitHub Actions, you can choose:
 
-- **Test Type:** all, map-tests, warehouse-tests, order-creation-tests
+- **Test Type:** all, map-tests, warehouse-tests, order-creation-tests, order-search-tests
 - **Browser:** chrome (only)
 
 ### Required GitHub Secrets
@@ -270,6 +298,20 @@ The project follows the Page Object Model pattern:
 - **WarehousePage:** Warehouse page interactions
 - **UserService:** API service methods
 
+### Test Data Management
+
+- **Centralized Data:** All test data is stored in `cypress/fixtures/testData.js`
+- **Data Categories:** Order creation, API endpoints, status codes, user data, UI elements
+- **Easy Maintenance:** Change values in one place, affects all tests
+- **Environment Flexibility:** Easy to create different data sets for different environments
+
+### Code Quality Features
+
+- **AAA Pattern:** All tests organized with Arrange, Act, Assert sections
+- **Separated Concerns:** Each test file focuses on specific functionality
+- **Data-Driven:** Tests use centralized data instead of hardcoded values
+- **Consistent Structure:** All tests follow the same organizational pattern
+
 ## 🐛 Troubleshooting
 
 ### Common Issues
@@ -310,7 +352,10 @@ Run tests in debug mode for detailed information:
 npx cypress open --config video=false
 
 # Run specific test with debug output
-npx cypress run --spec "cypress/e2e/map.spec.js" --headed
+npx cypress run --spec "cypress/e2e/map-page.spec.js" --headed
+
+# Run all tests with debug output
+npx cypress run --spec "cypress/e2e/*.spec.js" --headed
 ```
 
 ### Logs and Artifacts
